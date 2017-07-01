@@ -6,13 +6,8 @@ var bot = new Discord.Client({autoReconnect:true});
 
 bot.login(process.env.TOKEN);
 
-var listeningTo = {'324360777970483209' : -1, // Real channel
-                  '330444498649743362' : -1}; // Testing channel
+var listeningTo = {'324360777970483209' : -1}; // Auto-active in channel
 var messages = {};
-
-bot.on('ready', function(event) {
-    console.log('Logged in as %s - %s\n', bot.user.username, bot.user.id);
-});
 
 bot.on('message', function(message) {
 
@@ -51,9 +46,8 @@ bot.on('message', function(message) {
                 banned = true;
               }
               var reg = /^>>(\d+)$/g;
-              var match = reg.exec(textToAdd.trim());
+              var match = reg.exec(textToAdd);
               var roll = Math.floor(Math.random() * 3) + 1;
-              console.log(roll);
               if (match){
                 if (parseInt(match[1]) in messages){
                   textToAdd = "\`" + textToAdd + "\n\n" + messages[parseInt(match[1])] + "\`\n\n";
@@ -64,6 +58,13 @@ bot.on('message', function(message) {
                   textToAdd = "\`\`\`css\n" + textToAdd;
                   greenTexting = true;
                 }
+
+                var emote = /([\s\S]*)(<:.*:\d*>)/g;
+                var emoteMatch = emote.exec(textToAdd);
+                if (emoteMatch){
+                  textToAdd = emoteMatch[1] + "\`\`\`" + emoteMatch[2];
+                  greenTexting = false;
+                }
               } else if (greenTexting) {
                   textToAdd = "\`\`\`\n" + textToAdd;
                   greenTexting = false;
@@ -73,6 +74,7 @@ bot.on('message', function(message) {
               }
               newmessage += textToAdd + "\n";
             }
+
             if (greenTexting) {
               newmessage += "\`\`\`\n";
             }
@@ -98,7 +100,6 @@ bot.on('message', function(message) {
               var attachment = attachments[0];
               var url = attachment.url;
               var name = attachment.filename;
-              console.log(attachment.url);
               if (bannable(attachment.filename) && !banned){
                 newmessage = newmessage + "\`\`\`diff\n- (USER WAS BANNED FOR THIS POST)\n\`\`\`";
               }
