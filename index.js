@@ -125,7 +125,7 @@ bot.on('message', function(message) {
 function bannable(message){
   var badWords = ['anime', 'cp', 'yuri',
                   'hentai', 'waifu',
-                  'sugoi', 'ecchi', 'yaoi', 'loli'];
+                  'sugoi', 'ecchi', 'yaoi', 'loli', 'ahegao'];
   for (var i = 0; i < badWords.length; i++) {
     if (message.toLowerCase().indexOf(badWords[i]) !== -1) {
       return true;
