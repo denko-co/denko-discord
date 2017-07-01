@@ -54,7 +54,7 @@ bot.on('message', function(message) {
               var roll = Math.floor(Math.random() * 3) + 1;
               if (match){
                 if (parseInt(match[1]) in messages){
-                  textToAdd = "\`" + textToAdd + "\n\n" + messages[parseInt(match[1])].replace(/<:.*:\d*>/g, "\`$&\`") + "\`\n\n";
+                  textToAdd = "\`" + textToAdd + "\n\n" + messages[parseInt(match[1])].replace(/<:.*:\d*>/g, "\`$&\`") + " \`\n";
                 }
               }
               else if (textToAdd.startsWith(">")){
@@ -124,7 +124,7 @@ bot.on('message', function(message) {
 
 function bannable(message){
   var badWords = ['anime', 'cp', 'yuri',
-                  'hentai', 'sempai',
+                  'hentai', 'waifu',
                   'sugoi', 'ecchi', 'yaoi'];
   for (var i = 0; i < badWords.length; i++) {
     if (message.toLowerCase().indexOf(badWords[i]) !== -1) {
