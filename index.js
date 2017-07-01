@@ -9,6 +9,10 @@ bot.login(process.env.TOKEN);
 var listeningTo = {'324360777970483209' : -1}; // Auto-active in channel
 var messages = {};
 
+bot.on('ready', function(event) {
+    console.log('Logged in as %s - %s\n', bot.user.username, bot.user.id);
+});
+
 bot.on('message', function(message) {
 
     console.log(message.author.username + " - " + message.author.id + " - " + message.channel.id + " - " + message.content);
@@ -50,7 +54,7 @@ bot.on('message', function(message) {
               var roll = Math.floor(Math.random() * 3) + 1;
               if (match){
                 if (parseInt(match[1]) in messages){
-                  textToAdd = "\`" + textToAdd + "\n\n" + messages[parseInt(match[1])] + "\`\n\n";
+                  textToAdd = "\`" + textToAdd + "\n\n" + messages[parseInt(match[1])].replace(/<:.*:\d*>/g, "\`$&\`") + "\`\n\n";
                 }
               }
               else if (textToAdd.startsWith(">")){
