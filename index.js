@@ -8,6 +8,8 @@ bot.login(process.env.TOKEN);
 
 var listeningTo = {'324360777970483209' : -1}; // Auto-active in channel
 var messages = {};
+var msgQueue = [];
+var limit = 200;
 
 bot.on('ready', function(event) {
     console.log('Logged in as %s - %s\n', bot.user.username, bot.user.id);
@@ -116,6 +118,11 @@ bot.on('message', function(message) {
             }
 
             // Save this message for referencing
+            if (messages.length >= limit) {
+              var toBeRemoved = msgQueue.shift();
+              delete messages[toBeRemoved];
+            }
+            msgQueue.push(id);
             messages[id] = message.content;
         }
       }
