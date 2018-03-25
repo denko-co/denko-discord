@@ -33,18 +33,15 @@ bot.on('message', function (message) {
       message.channel.send('(´･ω･`)')
     } else if (channelID in listeningTo) {
       switch (message.content) {
-        /*
-        case 'ping' :
-        message.reply('pong')
-        break
-        */
-        case '' : break
         case 'Your emails are freaking me out.' :
         case 'You’re an annoyance.' :
         case 'Please don’t send any more emails.':
           delete listeningTo[channelID]
           message.channel.send('(´；ω；`)')
           break
+        case '' :
+          if (message.attachments.array().length === 0) break
+          // fall through
         default :
           // Delete old message
           message.delete()
@@ -62,42 +59,45 @@ function denkoify (message, listeningTo, channelID) {
   var banned = false
   var textToAdd
   var ticks = 0
-  for (var i = 0; i < lines.length; i++) {
-    textToAdd = lines[i].trim()
-    ticks += (textToAdd.match(/`/g) || []).length
-    if (bannable(textToAdd)) {
-      banned = true
-    }
-    var reg = /^>>(\d+)$/g
-    var match = reg.exec(textToAdd)
-    var roll = Math.floor(Math.random() * 3) + 1
-    if (match) {
-      if (parseInt(match[1]) in messages) {
-        textToAdd = '`' + textToAdd + '\n\n' + messages[parseInt(match[1])].replace(/<:.*:\d*>/g, '`$&`') + ' `\n'
-      }
-    } else if (textToAdd.startsWith('>')) {
-      if (!greenTexting) {
-        textToAdd = '```css\n' + textToAdd
-        greenTexting = true
-      }
 
-      var emote = /([\s\S]*)(<:.*:\d*>)/g
-      var emoteMatch = emote.exec(textToAdd)
-      if (emoteMatch) {
-        textToAdd = emoteMatch[1] + '```' + emoteMatch[2]
+  if (message.content !== '') {
+    for (var i = 0; i < lines.length; i++) {
+      textToAdd = lines[i].trim()
+      ticks += (textToAdd.match(/`/g) || []).length
+      if (bannable(textToAdd)) {
+        banned = true
+      }
+      var reg = /^>>(\d+)$/g
+      var match = reg.exec(textToAdd)
+      var roll = Math.floor(Math.random() * 3) + 1
+      if (match) {
+        if (parseInt(match[1]) in messages) {
+          textToAdd = '`' + textToAdd + '\n\n' + messages[parseInt(match[1])].replace(/<:.*:\d*>/g, '`$&`') + ' `\n'
+        }
+      } else if (textToAdd.startsWith('>')) {
+        if (!greenTexting) {
+          textToAdd = '```css\n' + textToAdd
+          greenTexting = true
+        }
+
+        var emote = /([\s\S]*)(<:.*:\d*>)/g
+        var emoteMatch = emote.exec(textToAdd)
+        if (emoteMatch) {
+          textToAdd = emoteMatch[1] + '```' + emoteMatch[2]
+          greenTexting = false
+        }
+      } else if (greenTexting) {
+        textToAdd = '```\n' + textToAdd
         greenTexting = false
+      } else if (roll === 1 && ticks % 2 === 0) {
+        textToAdd += ' (´･ω･`)'
       }
-    } else if (greenTexting) {
-      textToAdd = '```\n' + textToAdd
-      greenTexting = false
-    } else if (roll === 1 && ticks % 2 === 0) {
-      textToAdd += ' (´･ω･`)'
+      newmessage += textToAdd + '\n'
     }
-    newmessage += textToAdd + '\n'
-  }
 
-  if (greenTexting) {
-    newmessage += '```\n'
+    if (greenTexting) {
+      newmessage += '```\n'
+    }
   }
 
   var timestamp = moment().tz('Pacific/Auckland').format('MM/DD/YY (ddd)HH:mm:ss')
@@ -124,7 +124,13 @@ function denkoify (message, listeningTo, channelID) {
     if (bannable(attachment.filename) && !banned) {
       newmessage = newmessage + '```diff\n- (USER WAS BANNED FOR THIS POST)\n`'
     }
-    newmessage = newmessage + 'File: ' + attachment.filename + ' (' + formatBytes(attachment.filesize) + ', ' + attachment.width + 'x' + attachment.height + ')' + '\n'
+    newmessage = newmessage + 'File: ' + attachment.filename + ' (' + formatBytes(attachment.filesize)
+
+    if (attachment.width !== undefined && attachment.width !== undefined) {
+      newmessage += ', ' + attachment.width + 'x' + attachment.height
+    }
+
+    newmessage += ')\n'
     bot.channels.get(channelID).send(wrapMessage(newmessage), {
       file: attachment.url
     })
