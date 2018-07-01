@@ -32,6 +32,7 @@ bot.on('message', function (message) {
       listeningTo[channelID] = parseInt(message.id.toString().substr(message.id.toString().length - 9))
       message.channel.send('(´･ω･`)')
     } else if (channelID in listeningTo) {
+      var attachmentNumber = message.attachments.array().length
       switch (message.content) {
         case 'Your emails are freaking me out.' :
         case 'You’re an annoyance.' :
@@ -40,11 +41,13 @@ bot.on('message', function (message) {
           message.channel.send('(´；ω；`)')
           break
         case '' :
-          if (message.attachments.array().length === 0) break
+          if (attachmentNumber === 0) break
           // fall through
         default :
-          // Delete old message
-          message.delete()
+          if (attachmentNumber === 0) {
+            // Can delete without fear of referencing issues
+            message.delete()
+          }
           // Make and send new message!
           denkoify(message, listeningTo, channelID)
       }
@@ -133,9 +136,13 @@ function denkoify (message, listeningTo, channelID) {
     newmessage += ')\n'
     bot.channels.get(channelID).send(wrapMessage(newmessage), {
       file: attachment.url
+    }).then(function (denkoMessage) {
+      // Delete old non-denko message, now that we have the attachment
+      message.delete()
     })
   } else {
     bot.channels.get(channelID).send(wrapMessage(newmessage))
+    // Old post already taken care of
   }
 
   // Save this message for referencing
