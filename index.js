@@ -76,7 +76,7 @@ function denkoify (message, listeningTo, channelID) {
       var roll = Math.floor(Math.random() * 3) + 1
       if (match) {
         if (parseInt(match[1]) in messages) {
-          textToAdd = '`' + textToAdd + '\n\n' + messages[parseInt(match[1])].replace(/<:.*:\d*>/g, '`$&`') + ' `\n'
+          textToAdd = '`' + textToAdd.trim() + '\n\n' + messages[parseInt(match[1])].replace(/<:.*:\d*>/g, '`$&`') + ' `\n'
         }
       } else if (textToAdd.trim().startsWith('>')) {
         if (!greenTexting) {
