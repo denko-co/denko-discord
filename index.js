@@ -71,7 +71,7 @@ function denkoify (message, listeningTo, channelID) {
       if (bannable(textToAdd)) {
         banned = true
       }
-      var reg = /^>>(\d+)$/g
+      var reg = /^\s*>>(\d+)\s*$/g
       var match = reg.exec(textToAdd)
       var roll = Math.floor(Math.random() * 3) + 1
       if (match) {
