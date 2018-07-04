@@ -1,5 +1,6 @@
 var express = require('express')
 var moment = require('moment-timezone')
+var request = require('request')
 var app = express()
 var Discord = require('discord.js')
 var bot = new Discord.Client({autoReconnect: true})
@@ -65,7 +66,7 @@ function denkoify (message, listeningTo, channelID) {
 
   if (message.content !== '') {
     for (var i = 0; i < lines.length; i++) {
-      textToAdd = lines[i].trim()
+      textToAdd = lines[i]
       ticks += (textToAdd.match(/`/g) || []).length
       if (bannable(textToAdd)) {
         banned = true
@@ -77,7 +78,7 @@ function denkoify (message, listeningTo, channelID) {
         if (parseInt(match[1]) in messages) {
           textToAdd = '`' + textToAdd + '\n\n' + messages[parseInt(match[1])].replace(/<:.*:\d*>/g, '`$&`') + ' `\n'
         }
-      } else if (textToAdd.startsWith('>')) {
+      } else if (textToAdd.trim().startsWith('>')) {
         if (!greenTexting) {
           textToAdd = '```css\n' + textToAdd
           greenTexting = true
@@ -134,9 +135,7 @@ function denkoify (message, listeningTo, channelID) {
     }
 
     newmessage += ')\n'
-    bot.channels.get(channelID).send(wrapMessage(newmessage), {
-      file: attachment.url
-    }).then(function (denkoMessage) {
+    bot.channels.get(channelID).send(wrapMessage(newmessage), new Discord.Attachment(request(attachment.url), attachment.filename)).then(function (denkoMessage) {
       // Delete old non-denko message, now that we have the attachment
       message.delete()
     })
