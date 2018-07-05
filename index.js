@@ -26,7 +26,7 @@ bot.on('message', function (message) {
     }
     return
   }
-  console.log(message.author.username + ' - ' + message.author.id + ' - ' + message.channel.id + ' - ' + message.content)
+  console.log(message.channel.id + ' - ' + message.content)
   var channelID = message.channel.id.toString()
   if (!message.author.bot) {
     if (message.content.trim() === '(´･ω･`)' && !(channelID in listeningTo)) {
