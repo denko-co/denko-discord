@@ -35,8 +35,8 @@ bot.on('message', function (message) {
       listeningTo[channelID] = parseInt(message.id.toString().substr(message.id.toString().length - 9));
       message.channel.send('(´･ω･`)');
     } else if (channelID in listeningTo) {
-      var firstUserMentioned = message.mentions.users;
-      if (firstUserMentioned.size > 0 && firstUserMentioned.first().bot &&
+      var firstUserMentioned = message.mentions.users.first();
+      if (firstUserMentioned && firstUserMentioned.bot &&
       message.content.match(userMentionRegex).index === 0) {
         message.delete();
         return;
