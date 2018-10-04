@@ -7,7 +7,7 @@ var bot = new Discord.Client({autoReconnect: true});
 
 bot.login(process.env.TOKEN);
 
-var listeningTo = {'324360777970483209 : -1'}; // Auto-active in channel
+var listeningTo = {'324360777970483209' : -1'}; // Auto-active in channel
 var messages = {};
 var msgQueue = [];
 var limit = 200;
