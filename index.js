@@ -40,13 +40,13 @@ bot.on('message', function (message) {
         message.delete();
         return;
       }
-      var attachmentNumber = message.attachments.array().length
+      var attachmentNumber = message.attachments.array().length;
       switch (message.content) {
         case 'Your emails are freaking me out.' :
         case 'You’re an annoyance.' :
         case 'Please don’t send any more emails.':
-          delete listeningTo[channelID]
-          message.channel.send('(´；ω；`)')
+          delete listeningTo[channelID];
+          message.channel.send('(´；ω；`)');
           break
         case '' :
           if (attachmentNumber === 0) break
@@ -54,7 +54,7 @@ bot.on('message', function (message) {
         default :
           if (attachmentNumber === 0) {
             // Can delete without fear of referencing issues
-            message.delete()
+            message.delete();
           }
           // Make and send new message!
           denkoify(message, listeningTo, channelID);
