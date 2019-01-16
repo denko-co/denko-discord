@@ -102,7 +102,7 @@ function denkoify (message, listeningTo, channelID) {
         textToAdd = '```\n' + textToAdd;
         greenTexting = false;
       } else if (roll === 1 && ticks % 2 === 0) {
-        textToAdd += ' (´･ω･`)';
+        textToAdd += ' (´･ω･\\`)';
       }
       newmessage += textToAdd + '\n';
     }
