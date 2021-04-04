@@ -5,7 +5,9 @@ var app = express();
 var Discord = require('discord.js');
 var bot = new Discord.Client({autoReconnect: true});
 
-bot.login(process.env.TOKEN);
+bot.login(process.env.TOKEN).catch(function (msg) {
+  console.error(msg);
+});;
 
 var listeningTo = {'324360777970483209' : -1}; // Auto-active in channel
 var messages = {};
@@ -14,7 +16,7 @@ var limit = 200;
 // To remove global flag
 var userMentionRegex = new RegExp(Discord.MessageMentions.USERS_PATTERN, '');
 
-bot.on('ready', function (event) {
+bot.once('ready', function (event) {
   console.log('Logged in as %s - %s\n', bot.user.username, bot.user.id);
 });
 

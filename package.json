@@ -9,9 +9,9 @@
   "author": "Frano Stanisic",
   "license": "MIT",
   "dependencies": {
-    "discord.js": "^11.3.2",
+    "discord.js": "^11.6.4",
     "express": "^4.15.3",
-    "moment-timezone": "^0.5.13",
-    "request": "^2.87.0"
+    "moment-timezone": "^0.5.33",
+    "request": "^2.88.2"
   }
 }
